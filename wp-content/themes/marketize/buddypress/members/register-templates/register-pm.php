@@ -2,11 +2,16 @@
 
 		<?php bp_nouveau_template_notices(); ?>
 
-			<?php bp_nouveau_user_feedback( bp_get_current_signup_step() ); ?>
+		<?php /*****  bp_nouveau_user_feedback( bp_get_current_signup_step() ); ******/?>
 
 			<form action="" name="signup_form" id="signup-form" class="standard-form signup-form clearfix" method="post" enctype="multipart/form-data">
 
 			<div class="layout-wrap">
+                
+               <div class="registration-intro">
+                <p><strong>Congratulations, you've taken the first step to a whole new world.</strong> </p>
+                   <p>Submit your registration details and we will forward your activation code and instructions on how to load and maintain your very own webpage.</p>
+                </div>
 
 			<?php if ( 'request-details' === bp_get_current_signup_step() ) : ?>
 

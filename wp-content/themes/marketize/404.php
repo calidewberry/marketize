@@ -17,11 +17,11 @@ get_header();
 
                     <div class="page-content">
                         <p class="page-title"><?php esc_html_e( 'Ooops, wrong URL... ', 'marketize' ); ?></p>
-                        <p><?php esc_html_e( 'Please checkout our HOME PAGE for an introduction to our freelance graphic design services', 'marketize' ); ?></p>
+                        <p><?php esc_html_e( 'Please checkout our HOME PAGE', 'marketize' ); ?></p>
 
                             <div class="inline-button">
                                 <p style="margin: 0; padding: 0;"></p> 
-                                <a href="https://marketize.biz" class="general-button">marketize.biz</a>
+                                <a href="https://comehunting.com" class="general-button">comehunting.com</a>
 
                             </div>
 

@@ -296,15 +296,6 @@
 
                 <?php $town_coordinates = get_field( 'address_coordinates' ); 
                     $town_coordinates_array = [];
-                    $property_link = null;
-                    $property_link_class = null;
-
-                    if ( is_user_logged_in() ) {
-                        $property_link = get_the_permalink();
-                    } else {
-                        $property_link = 'javascript:;';
-                        $property_link_class = 'guest-opportunity-modal pum-trigger';
-                    }
 
                     // if ( is_numeric( $town_coordinates ) ) {
                     //     print_r($town_coordinates);
@@ -318,8 +309,7 @@
                     }
 
                     $infowindowContent = '<div class="property-infowindow">';
-
-                        $infowindowContent .= '<a href="' . esc_url( $property_link ) . '" class="' . esc_attr( $property_link_class ) . '"><h4>' . get_the_title() . '</h4></a>';
+                        $infowindowContent .= '<a href="' . get_the_permalink() . '"><h4>' . get_the_title() . '</h4></a>';
                     $infowindowContent .= '</div>';
 
                     $color_profile = get_field( 'property_color_profile' );

@@ -1,15 +1,13 @@
 <?php acf_form_head(); ?>
 
-<?php get_header(); ?>
-
-<?php
-
-	$profile_edit_link = bp_core_get_user_domain( get_current_user_id() ) . 'profile/edit/group/3/';
+<?php 
 
 	$form_type = null;
 	$property_id = null;
 	$page_title = get_the_title();
 	$error_msg = null;
+	$saved_msg = null;
+	$saved_class = '';
 
 	if ( isset( $_GET['type'] ) ) {
 		$form_type = sanitize_text_field( $_GET['type'] );
@@ -18,13 +16,39 @@
 	if ( isset( $_GET['id'] ) ) {
 		$property_id = sanitize_text_field( $_GET['id'] );
 	}
+
+	if ( isset( $_GET['updated'] ) ) {
+		$saved_msg = sanitize_text_field( $_GET['updated'] );
+	}
+
+	if ( $form_type == 'new' && $saved_msg == 'true' ) {
+		$most_recent_property = wp_get_recent_posts( [
+			'post_type' => 'property',
+			'author' => get_current_user_id(),
+			'numberposts' => 1,
+		] );
+
+		if ( ! is_wp_error( $most_recent_property ) && isset( $most_recent_property[0] ) && isset( $most_recent_property[0]['ID'] ) ) {
+			$edit_property_url = get_home_url() . '/add-new-property/?type=edit&id=' . $most_recent_property[0]['ID'];
+			wp_safe_redirect( $edit_property_url );
+			exit();
+		}
+	}
+
+?>
+
+<?php get_header(); ?>
+
+<?php
+
+	$profile_edit_link = bp_core_get_user_domain( get_current_user_id() ) . 'profile/edit/group/3/';
 	
 	$form_data = [
 		'id'				=> 'new-property',
 		'post_title'		=> true,
-		'post_content'		=> true,
-		'return'			=> $profile_edit_link,
-		'updated_message'	=> false
+		'post_content'		=> false,
+		'updated_message'	=> false,
+		'html_after_fields' => '<div class="back-to-profile"><a href="' . esc_url( $profile_edit_link ) . '">' . __( 'Back to Profile', 'marketize' ) . '</a></div>',
 	]; 
 
 	if ( ! empty( $form_type ) ) {
@@ -58,6 +82,11 @@
 
 		}
 
+		if ( ! empty( $saved_msg ) && $saved_msg == 'true' ) {
+			$submit_value = __( 'Saved', 'marketize' );
+			$saved_class = 'saved-property';
+		}
+
 		$form_data['submit_value'] = $submit_value;
 
 	}
@@ -73,7 +102,7 @@
 				</div>
 			</div>
 			
-			<div class="row">
+			<div class="row <?php echo esc_attr( $saved_class ); ?>">
 				<div class="col">
 
 					<?php if ( ! empty( $error_msg ) ) : ?>
@@ -116,28 +145,28 @@
 		
 		}
 
-		jQuery( 'body' ).find( '#acf-field_5dd1b3af3a800' ).change( function() {
+		// jQuery( 'body' ).find( '#acf-field_5dd1b3af3a800' ).change( function() {
 
-			placeChanged = false;
+		// 	placeChanged = false;
 
-			setTimeout( function() {
+		// 	setTimeout( function() {
 			  
-			  if ( placeChanged === false ) {
+		// 	  if ( placeChanged === false ) {
 
-			  	var enteredVal = jQuery( 'body' ).find( '#acf-field_5dd1b3af3a800' ).val();
+		// 	  	var enteredVal = jQuery( 'body' ).find( '#acf-field_5dd1b3af3a800' ).val();
 
-			  	if ( enteredVal.length > 0 ) {
+		// 	  	if ( enteredVal.length > 0 ) {
 
-			  		jQuery( '#acf-field_5dd1b3ed3a801' ).val( enteredVal );
-			  	}
+		// 	  		jQuery( '#acf-field_5dd1b3ed3a801' ).val( enteredVal );
+		// 	  	}
 
-			  }
+		// 	  }
 			
-			}, 500 );
+		// 	}, 500 );
 	    		
     		
 
-    	});
+  //   	});
 
 	</script>
 

@@ -164,6 +164,8 @@ function marketize_scripts() {
     wp_enqueue_style( 'fancybox-css', 'https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css' ); 
     
 	wp_enqueue_style( 'marketize-style', get_stylesheet_uri() );
+
+	wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css' );
     
     wp_register_script( 'jquery', get_template_directory_uri() . '/assets/css/jquery-3.3.1.min.js', array( 'jquery' ), '3.3.1', true  );
     wp_enqueue_script( 'jquery' );    
@@ -196,6 +198,8 @@ function marketize_scripts() {
     wp_enqueue_script( 'showHide' );
 
     wp_enqueue_script( 'fancybox-js', 'https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', array('jquery'), '3.5.7', true );
+
+    wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js', array( 'jquery' ), '4.0.12', true );
     
     wp_register_script('main', get_stylesheet_directory_uri() . '/assets/js/main.js', array(), false, true);
     wp_enqueue_script( 'main' );
@@ -459,7 +463,7 @@ function comehunting_get_discipline_property () {
 
         }
 
-		
+		 $animal_names = comehunting_get_all_animal_names( $disciplines );
 	
 
 		$property_query = new WP_Query( $property_args );
@@ -505,7 +509,7 @@ function comehunting_get_discipline_property () {
             ];
 
 		endwhile; endif; wp_reset_postdata();
-	echo json_encode( $properties );
+	echo json_encode( [$properties,$animal_names] );
 
 	wp_die();
 }
@@ -796,7 +800,7 @@ function comehunting_get_profile_group_tabs() {
 			
 			$is_profile_incomplete = get_user_meta( get_current_user_id(), 'is_user_profile_complete', true );
 
-			if ( $is_profile_incomplete ) {
+			if ( $is_profile_incomplete == 'incomplete' ) {
 				$link = '#';
 				$selected = ' class="property-link disabled"';
 			} else {
@@ -857,7 +861,7 @@ function is_incomplete_tab( $field_ids = [] ) {
 
 	}
 
-	update_user_meta( get_current_user_id(), 'is_user_profile_complete', $is_incomplete );
+	//update_user_meta( get_current_user_id(), 'is_user_profile_complete', $is_incomplete );
 
 	return $is_incomplete;
 
@@ -879,7 +883,7 @@ add_filter( 'bp_get_the_profile_group_name', function( $group_name ) {
 	
 	} else if ( $group_name == 'Contact' ) {
 
-		$field_ids = [ '281', '282', '283', '284', '285', '286', '287' ];
+		$field_ids = [ '281', '283', '285', '286', '287' ];
 
 	} else if ( $group_name == 'Hunting Profile' && $member_type == 'Guest User' ) {
 
@@ -902,3 +906,119 @@ add_filter( 'bp_get_the_profile_group_name', function( $group_name ) {
 	return $group_name;
 
 });
+
+add_action( 'xprofile_updated_profile', function( $userId, $posted_field_ids, $errors, $old_values, $new_values ) {
+
+	$is_incomplete_tab = false;
+	$complete_text = 'complete';
+
+	$field_ids = [ '1', '254', '281', '283', '285', '286', '287' ];
+
+	$is_incomplete_tab = is_incomplete_tab( $field_ids );
+
+	if ( $is_incomplete_tab === true ) {
+		$complete_text = 'incomplete';
+	}
+
+	update_user_meta( get_current_user_id(), 'is_user_profile_complete', $complete_text );
+
+}, 10, 5 );
+
+//Disable Buddypress Gravatar
+add_filter('bp_core_fetch_avatar_no_grav', '__return_true');
+
+// Get All Animal Names by Member Disciplines
+function comehunting_get_all_animal_names( $member_disciplines = [ 'Hunting', 'Wingshooting', 'Angling' ] ) {
+
+	$animal_names = [];
+    $hunting_species = [];
+    $pigeons_and_doves = [];
+    $upland_birds = [];
+    $waterfowl = [];
+    $freshwater_river = [];
+    $freshwater_dam = [];
+    $saltwater_estuary = [];
+
+    if ( in_array( "Hunting", $member_disciplines ) ) {
+
+        $hunting_species_object = get_field_object( 'field_5db2017866a5c' );
+
+        if ( ! empty( $hunting_species_object ) && isset( $hunting_species_object['choices'] ) ) {
+            $hunting_species = $hunting_species_object['choices'];
+        }
+
+        $upland_birds_object = get_field_object( 'field_5db2080ee6261' );
+
+        if ( ! empty( $upland_birds_object ) && isset( $upland_birds_object['choices'] ) ) {
+            $upland_birds = $upland_birds_object['choices'];
+        }
+
+        $waterfowl_object = get_field_object( 'field_5db20972e6264' );
+
+        if ( ! empty( $waterfowl_object ) && isset( $waterfowl_object['choices'] ) ) {
+            $waterfowl = $waterfowl_object['choices'];
+        }
+
+    }
+
+    if ( in_array( "Wingshooting", $member_disciplines ) ) {
+
+        $pigeons_and_doves_object = get_field_object( 'field_5db2057ec14ec' );
+
+        if ( ! empty( $pigeons_and_doves_object ) && isset( $pigeons_and_doves_object['choices'] ) ) {
+            $pigeons_and_doves = $pigeons_and_doves_object['choices'];
+        }
+
+
+    }
+
+    if ( in_array( "Angling", $member_disciplines ) ) {
+
+        $freshwater_river_object = get_field_object( 'field_5db21010cbbc8' );
+
+        if ( ! empty( $freshwater_river_object ) && isset( $freshwater_river_object['choices'] ) ) {
+            $freshwater_river = $freshwater_river_object['choices'];
+        }
+
+        $freshwater_dam_object = get_field_object( 'field_5db2115ccbbd1' );
+
+        if ( ! empty( $freshwater_dam_object ) && isset( $freshwater_dam_object['choices'] ) ) {
+            $freshwater_dam = $freshwater_dam_object['choices'];
+        }
+
+        $saltwater_estuary_object = get_field_object( 'field_5db211c6cbbd4' );
+
+        if ( ! empty( $saltwater_estuary_object ) && isset( $saltwater_estuary_object['choices'] ) ) {
+            $saltwater_estuary = $saltwater_estuary_object['choices'];
+        }
+
+
+    }
+
+    $animal_names = array_merge( $hunting_species, $pigeons_and_doves, $upland_birds, $waterfowl, $freshwater_river, $freshwater_dam, $saltwater_estuary );
+
+    return $animal_names;
+
+}
+
+// Delete properties belongs to a user when user profile being deleted
+add_action( 'delete_user', function( $user_id ) {
+
+	$user_properties = get_posts( [
+		'post_type' => 'property',
+		'author' => $user_id,
+		'posts_per_page' => -1,
+		'fields' => 'ids'
+	] );
+
+	if ( ! is_wp_error( $user_properties ) && count( $user_properties ) > 0 ) {
+
+		foreach( $user_properties as $property_id ) {
+
+			wp_delete_post( $property_id, true );
+
+		}
+
+	}
+
+}, 10 );

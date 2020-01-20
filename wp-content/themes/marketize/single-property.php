@@ -665,6 +665,23 @@ if( $images ): ?>
   <!-- end amenities -->           
  
    
+            
+            
+            
+            
+            
+</div>
+        <!-- DISPLAY CALENDAR IN TAB -->
+        <div id="tab2" class="tab">
+
+            <div>  
+                <p>CALENDAR</p>
+            </div>
+        </div>  
+
+    </article>
+</div>  <!-- end all tabs --> 
+
               <!-- DISPLAY SPECIES IN TABS --> 
            
  <?php    if( ('hunting_species' || 'pigeons_and_doves' || 'other_pigeons_and_doves' || 'freshwater_river' || 'other_freshwater_river') ): ?>              
@@ -712,7 +729,7 @@ if( $images ): ?>
                                                 $trophy         = get_sub_field('trophy');
                                                 $animal_price   = get_sub_field('animal_price');
                                             ?>                                    
-                                                                                            <tr>
+                                            <tr>
                                                 <td><?php the_sub_field('animal') ?></td>
                                                 <td><?php the_sub_field('gender') ?></td>
                                                 <td><?php the_sub_field('trophy') ?></td>
@@ -1013,35 +1030,7 @@ if( $images ): ?>
                 </div>
             </div>  
 <?php endif; ?>
-             <!-- end species in tabs -->             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        </div>
-        <!-- DISPLAY CALENDAR IN TAB -->
-        <div id="tab2" class="tab">
-
-            <div>  
-                <p>CALENDAR</p>
-            </div>
-        </div>  
-
-    </article>
-</div>    
-
-
+             <!-- end species in tabs --> 
   
     
 <script>

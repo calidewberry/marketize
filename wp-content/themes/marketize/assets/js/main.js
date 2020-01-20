@@ -244,6 +244,16 @@ jQuery(document).ready(function($) {
 
   });
 
+  jQuery( 'body' ).on( 'keyup change paste', '#new-property input, #new-property select, #new-property textarea', function() {
+      
+      jQuery('body').find( '#new-property' ).find( '.acf-form-submit' ).fadeIn();
+
+      if ( jQuery('body').find( '#new-property' ).find('.acf-form-submit').find('input').val() == 'Saved' ) {
+        jQuery('body').find( '#new-property' ).find('.acf-form-submit').find('input').val( 'Save Changes' );
+      }
+
+  });
+
   jQuery( '.delete-property' ).click( function( event ) {
     
     if ( window.confirm("Do you really want to delete this property?") ) {
@@ -280,9 +290,68 @@ jQuery(document).ready(function($) {
 
   });
 
+  jQuery('#search_species').select2();
+
+  if ( jQuery( 'body' ).find( '#edit-personal-li') ) {
+
+    var editProfileTab = jQuery( 'body' ).find( '#edit-personal-li' );
+    var editProfileLink = editProfileTab.find( 'a').attr( 'href' );
+
+    //console.log( editProfileTab );
+
+    if ( editProfileLink ) {
+      editProfileLink = editProfileLink + '/group/3';
+      editProfileTab.find('a').attr('href', editProfileLink );
+    }
+
+  }
+
+  var addressField = jQuery( 'div[data-name="property_address"]' );
+
+    if ( !addressField.hasClass('acf-hidden') ) {
+      jQuery( 'div[data-name="address_coordinates"]').addClass('acf-hidden');
+    } else {
+      jQuery( 'div[data-name="address_coordinates"]').removeClass('acf-hidden');
+    }
+
+  jQuery( 'div[data-name="only_has_coordinates_of_the_property"]' ).find( '.acf-switch' ).click(function(event) {
+    
+    var addressField = jQuery( 'div[data-name="property_address"]' );
+
+    if ( addressField.hasClass('acf-hidden') ) {
+      jQuery( 'div[data-name="address_coordinates"]').addClass('acf-hidden');
+    } else {
+      jQuery( 'div[data-name="address_coordinates"]').removeClass('acf-hidden');
+    }
+
+  });
+
+  jQuery( 'div[data-name="address_coordinates"]' ).find( 'input' ).keypress( function( event ) {
+
+    CheckNumeric( event );
+
+  });
+
 
 
 });
+
+function CheckNumeric(e) {
+    if (window.event) // IE
+
+    {
+        if ((e.keyCode < 48 || e.keyCode > 57) & e.keyCode != 8 && e.keyCode != 44 && e.keyCode != 46 ) {
+            event.returnValue = false;
+            return false;
+        }
+    }
+    else { // Fire Fox
+        if ((e.which < 48 || e.which > 57) & e.which != 8 && e.which != 44 && e.which != 46 ) {
+            e.preventDefault();
+            return false;
+        }
+    }
+}
 
 function gup( name, url ) {
     if (!url) url = location.href;

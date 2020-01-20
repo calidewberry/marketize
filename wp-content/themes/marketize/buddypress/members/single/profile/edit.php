@@ -8,9 +8,14 @@
 
 bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 
-<?php $is_profile_incomplete = get_user_meta( get_current_user_id(), 'is_user_profile_complete', true ); ?>
+<?php $is_profile_incomplete = get_user_meta( get_current_user_id(), 'is_user_profile_complete', true ); 
+	
+	if ( $is_profile_incomplete == '' ) {
+		$is_profile_incomplete = 'incomplete';
+	}
+?>
 
-<?php if ( $is_profile_incomplete ) : ?>
+<?php if ( $is_profile_incomplete == 'incomplete' ) : ?>
 	
 	<div class="card border-warning mb-3">
 	  <div class="card-header"><?php _e( 'Complete profile in order to add property', 'marketize' ); ?></div>

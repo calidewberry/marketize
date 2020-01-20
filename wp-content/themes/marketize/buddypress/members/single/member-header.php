@@ -10,7 +10,15 @@
 <div id="item-header-avatar">
 	<a href="<?php bp_displayed_user_link(); ?>">
 
-		<?php bp_displayed_user_avatar( 'type=full' ); ?>
+		 <?php $avatar_src = bp_get_loggedin_user_avatar( ['type' => 'full', 'html' => false ] );
+
+			$default_avatar_src = get_site_url( null, '/wp-content/plugins/buddypress/bp-core/images/mystery-man.jpg' );
+
+			if ( ! empty( $avatar_src ) && $avatar_src != $default_avatar_src ) {
+				echo '<img src="' . esc_url( $avatar_src ) . '" class="avatar user-' . bp_displayed_user_id() . '-avatar avatar-150 photo" width="150" height="150" />';
+			}
+
+		?>
 
 	</a>
 </div><!-- #item-header-avatar -->
